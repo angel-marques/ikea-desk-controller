@@ -1,9 +1,12 @@
 [project]
 name = "idasen-controller"
 version = "0.1.0"
-description = "Add your description here"
+description = "Control IKEA IDÅSEN standing desk from macOS via Bluetooth"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "bleak>=2.1.1",
 ]
+
+[project.scripts]
+desk = "idasen_controller:main"

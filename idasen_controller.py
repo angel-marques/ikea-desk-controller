@@ -47,9 +47,10 @@ POSITION_SIT = 0.72
 POSITION_STAND = 1.10
 POSITION_WALK = 1.18  # For walking pad/treadmill
 
-# Config file paths
-CONFIG_PATH = Path(__file__).parent / "config.toml"
-PRESETS_PATH = Path(__file__).parent / "presets.json"
+# Config directory (~/.config/desk/)
+CONFIG_DIR = Path.home() / ".config" / "desk"
+CONFIG_PATH = CONFIG_DIR / "config.toml"
+PRESETS_PATH = CONFIG_DIR / "presets.json"
 
 
 def load_config() -> dict:
@@ -65,6 +66,7 @@ def load_config() -> dict:
 
 def save_config(config: dict):
     """Save configuration to config.toml."""
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     lines = ["# IKEA IDÅSEN Desk Controller Configuration\n"]
     if "addr" in config:
         lines.append(f'addr = "{config["addr"]}"\n')
@@ -91,6 +93,7 @@ def load_presets() -> dict:
 
 def save_presets(presets: dict):
     """Save presets to presets.json."""
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     with open(PRESETS_PATH, "w") as f:
         json.dump(presets, f, indent=2)
 
@@ -258,7 +261,7 @@ async def scan_for_desks(timeout: float = 10.0) -> list:
     return desks
 
 
-async def main():
+async def async_main():
     # Load config first
     config = load_config()
 
@@ -445,5 +448,10 @@ Examples:
         print("Disconnected")
 
 
+def main():
+    """Entry point for the CLI."""
+    asyncio.run(async_main())
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
