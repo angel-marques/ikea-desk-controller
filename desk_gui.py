@@ -7,8 +7,10 @@ Modern graphical interface using customtkinter
 import asyncio
 import struct
 import threading
+from pathlib import Path
 import customtkinter as ctk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 
 from idasen_controller import (
     IdasenDesk,
@@ -17,6 +19,9 @@ from idasen_controller import (
     MIN_HEIGHT,
     MAX_HEIGHT,
 )
+
+# Icon path
+ICON_PATH = Path(__file__).parent / "icon.png"
 
 
 # Dark theme
@@ -31,6 +36,15 @@ class DeskGUI(ctk.CTk):
         self.title("IKEA Desk Controller")
         self.geometry("320x580")
         self.resizable(False, False)
+
+        # Set icon
+        if ICON_PATH.exists():
+            try:
+                icon_image = Image.open(ICON_PATH)
+                self.icon_photo = ImageTk.PhotoImage(icon_image)
+                self.iconphoto(True, self.icon_photo)
+            except Exception:
+                pass
 
         # State
         self.desk = None
