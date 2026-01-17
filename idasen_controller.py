@@ -114,6 +114,7 @@ class IdasenDesk:
         self.client: Optional[BleakClient] = None
         self._height = 0.0
         self._speed = 0
+        self._notifications_started = False
 
     async def connect(self) -> bool:
         """Connect to the desk."""
@@ -122,6 +123,7 @@ class IdasenDesk:
             await self.client.connect()
             # Subscribe to height notifications
             await self.client.start_notify(UUID_HEIGHT, self._height_callback)
+            self._notifications_started = True
             # Wake up the desk
             await self.client.write_gatt_char(UUID_COMMAND, CMD_WAKEUP)
             await asyncio.sleep(0.5)
@@ -133,7 +135,12 @@ class IdasenDesk:
     async def disconnect(self):
         """Disconnect from the desk."""
         if self.client and self.client.is_connected:
-            await self.client.stop_notify(UUID_HEIGHT)
+            if self._notifications_started:
+                try:
+                    await self.client.stop_notify(UUID_HEIGHT)
+                except Exception:
+                    pass
+                self._notifications_started = False
             await self.client.disconnect()
 
     def _height_callback(self, sender, data: bytearray):
@@ -167,49 +174,54 @@ class IdasenDesk:
         """Move desk to target height in meters."""
         target_height = max(MIN_HEIGHT, min(MAX_HEIGHT, target_height))
 
-        # Stop notifications during movement to avoid conflicts
-        await self.client.stop_notify(UUID_HEIGHT)
+        # Stop notifications to avoid conflicts with manual reads
+        if self._notifications_started:
+            try:
+                await self.client.stop_notify(UUID_HEIGHT)
+                self._notifications_started = False
+            except Exception:
+                pass
+
+        # Get initial height
+        current = await self.get_height()
+        print(f"Current: {current:.2f}m -> Target: {target_height:.2f}m")
+
+        if abs(current - target_height) < 0.005:
+            print("Already at target height")
+            return
+
+        # Convert target to raw bytes
+        raw_target = meters_to_raw(target_height)
+        target_bytes = struct.pack("<H", raw_target)
+
+        # Initialize: wakeup and stop to prepare reference input system
+        await self.client.write_gatt_char(UUID_COMMAND, CMD_WAKEUP)
+        await asyncio.sleep(0.1)
+        await self.client.write_gatt_char(UUID_COMMAND, CMD_STOP)
+        await asyncio.sleep(0.1)
+
+        previous_height = current
+        stall_count = 0
 
         try:
-            # Get initial height with direct read
-            current = await self.get_height()
-            print(f"Current: {current:.2f}m -> Target: {target_height:.2f}m")
-
-            if abs(current - target_height) < 0.005:
-                print("Already at target height")
-                return
-
-            # Prepare: wakeup and stop to initialize reference input
-            await self.client.write_gatt_char(UUID_COMMAND, CMD_WAKEUP)
-            await asyncio.sleep(0.1)
-            await self.client.write_gatt_char(UUID_COMMAND, CMD_STOP)
-            await asyncio.sleep(0.1)
-
-            # Convert target to raw bytes
-            raw_target = meters_to_raw(target_height)
-            target_bytes = struct.pack("<H", raw_target)
-
-            previous_height = current
-            stall_count = 0
-
             while True:
-                # Send target position - this makes the desk move automatically
+                # Send target position via REFERENCE_INPUT - desk moves automatically
                 await self.client.write_gatt_char(UUID_REFERENCE_INPUT, target_bytes)
                 await asyncio.sleep(0.2)
 
-                # Read height directly
+                # Read current height
                 current = await self.get_height()
                 print(f"  Height: {current:.3f}m ({current*100:.1f}cm)    ", end="\r")
 
-                # Check if we reached target or stopped moving
-                if abs(current - target_height) < 0.005:
+                # Check if we reached target
+                if abs(current - target_height) < 0.01:
                     print(f"\nReached target: {current:.2f}m ({current*100:.1f}cm)")
                     break
 
-                # Detect if desk stopped moving (stalled)
+                # Detect if desk stopped moving
                 if abs(current - previous_height) < 0.001:
                     stall_count += 1
-                    if stall_count > 10:
+                    if stall_count > 20:
                         print(f"\nDesk stopped at: {current:.2f}m ({current*100:.1f}cm)")
                         break
                 else:
@@ -222,19 +234,16 @@ class IdasenDesk:
             raise
         finally:
             await self.stop()
-            # Re-enable notifications
-            await self.client.start_notify(UUID_HEIGHT, self._height_callback)
 
     async def monitor(self):
         """Monitor desk height continuously."""
         print("Monitoring height (Ctrl+C to stop)...")
-        await asyncio.sleep(0.3)  # Wait for first notification
         try:
             while True:
-                height = self._height
+                height = await self.get_height()
                 cm = height * 100
                 print(f"Height: {height:.3f}m ({cm:.1f}cm) | Speed: {self._speed}    ", end="\r")
-                await asyncio.sleep(0.2)
+                await asyncio.sleep(0.3)
         except asyncio.CancelledError:
             pass
 

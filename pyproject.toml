@@ -6,7 +6,12 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "bleak>=2.1.1",
+    "customtkinter>=5.2.2",
 ]
 
 [project.scripts]
 desk = "idasen_controller:main"
+desk-gui = "desk_gui:main"
+
+[tool.setuptools]
+py-modules = ["idasen_controller", "desk_gui"]
