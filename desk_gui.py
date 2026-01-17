@@ -5,6 +5,7 @@ Modern graphical interface using customtkinter
 """
 
 import asyncio
+import json
 import struct
 import threading
 from pathlib import Path
@@ -20,8 +21,10 @@ from idasen_controller import (
     MAX_HEIGHT,
 )
 
-# Icon path
+# Paths
 ICON_PATH = Path(__file__).parent / "icon.png"
+CONFIG_DIR = Path.home() / ".config" / "desk"
+WINDOW_STATE_FILE = CONFIG_DIR / "window_state.json"
 
 
 # Dark theme
@@ -29,13 +32,41 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 
+def load_window_state():
+    """Load saved window position."""
+    if WINDOW_STATE_FILE.exists():
+        try:
+            with open(WINDOW_STATE_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return None
+
+
+def save_window_state(x, y):
+    """Save window position."""
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        with open(WINDOW_STATE_FILE, "w") as f:
+            json.dump({"x": x, "y": y}, f)
+    except Exception:
+        pass
+
+
 class DeskGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
 
         self.title("IKEA Desk Controller")
-        self.geometry("320x580")
         self.resizable(False, False)
+
+        # Restore window position or center
+        window_state = load_window_state()
+        if window_state:
+            self.geometry(f"320x580+{window_state['x']}+{window_state['y']}")
+        else:
+            self.geometry("320x580")
+            self.eval('tk::PlaceWindow . center')
 
         # Set icon
         if ICON_PATH.exists():
@@ -45,6 +76,12 @@ class DeskGUI(ctk.CTk):
                 self.iconphoto(True, self.icon_photo)
             except Exception:
                 pass
+
+        # Bring to front
+        self.lift()
+        self.attributes('-topmost', True)
+        self.after(100, lambda: self.attributes('-topmost', False))
+        self.focus_force()
 
         # State
         self.desk = None
@@ -404,6 +441,12 @@ class DeskGUI(ctk.CTk):
 
     def on_close(self):
         """Handle window close."""
+        # Save window position
+        try:
+            save_window_state(self.winfo_x(), self.winfo_y())
+        except Exception:
+            pass
+
         self.running = False
         self.connected = False
 
