@@ -16,11 +16,11 @@ struct MainControlView: View {
                 // Height Section
                 HeightDisplaySection()
 
-                // Controls Section
-                ControlsSection()
-
                 // Quick Presets Section
                 QuickPresetsSection(selectedTab: $selectedTab)
+
+                // Controls Section
+                ControlsSection()
             }
         }
         .onAppear {
@@ -284,17 +284,6 @@ struct PresetCard: View {
                 Text(String(format: "%.1f cm", profile.height))
                     .font(AppFont.caption)
                     .foregroundColor(.textMuted)
-
-                if isActive {
-                    Text("Active")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(.black)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.accentOrange)
-                        .cornerRadius(8)
-                        .padding(.top, 4)
-                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
@@ -304,6 +293,18 @@ struct PresetCard: View {
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(isActive ? Color.accentOrange : Color.borderLight, lineWidth: isActive ? 2 : 1)
             )
+            .overlay(alignment: .bottom) {
+                if isActive {
+                    Text("Active")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.accentOrange)
+                        .cornerRadius(8)
+                        .offset(y: 12)
+                }
+            }
         }
         .buttonStyle(.plain)
     }
