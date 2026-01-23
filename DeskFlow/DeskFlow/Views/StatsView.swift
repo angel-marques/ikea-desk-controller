@@ -178,50 +178,119 @@ struct LegendItem: View {
 
 struct WeeklyChart: View {
     let data: [(day: String, standing: Double, sitting: Double)]
+    @State private var hoveredIndex: Int? = nil
 
     private var maxValue: Double {
-        data.map { $0.standing + $0.sitting }.max() ?? 8
+        max(data.map { $0.standing + $0.sitting }.max() ?? 1, 1)
+    }
+
+    private var selectedData: (day: String, standing: Double, sitting: Double)? {
+        guard let index = hoveredIndex, index < data.count else { return nil }
+        return data[index]
     }
 
     var body: some View {
-        VStack(spacing: 8) {
-            // Bars
-            HStack(alignment: .bottom, spacing: 8) {
-                ForEach(data.indices, id: \.self) { index in
-                    let item = data[index]
-                    VStack(spacing: 2) {
-                        // Standing bar
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Color.standing)
-                            .frame(width: 24, height: barHeight(for: item.standing))
+        VStack(spacing: 12) {
+            // Hover tooltip
+            HStack {
+                if let selected = selectedData {
+                    HStack(spacing: 16) {
+                        Text(selected.day)
+                            .font(AppFont.headline)
+                            .foregroundColor(.textPrimary)
 
-                        // Sitting bar
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Color.sitting)
-                            .frame(width: 24, height: barHeight(for: item.sitting))
+                        HStack(spacing: 4) {
+                            Circle().fill(Color.standing).frame(width: 8, height: 8)
+                            Text(formatHours(selected.standing))
+                                .font(AppFont.body)
+                                .foregroundColor(.standing)
+                        }
+
+                        HStack(spacing: 4) {
+                            Circle().fill(Color.sitting).frame(width: 8, height: 8)
+                            Text(formatHours(selected.sitting))
+                                .font(AppFont.body)
+                                .foregroundColor(.sitting)
+                        }
+                    }
+                    .transition(.opacity)
+                } else {
+                    Text("Hover over a day for details")
+                        .font(AppFont.caption)
+                        .foregroundColor(.textMuted)
+                }
+                Spacer()
+            }
+            .frame(height: 20)
+            .animation(.easeInOut(duration: 0.15), value: hoveredIndex)
+
+            // Chart
+            GeometryReader { geometry in
+                let spacing: CGFloat = 12
+                let barWidth = (geometry.size.width - CGFloat(data.count - 1) * spacing) / CGFloat(data.count)
+                let chartHeight = geometry.size.height - 28  // Leave space for labels
+
+                VStack(spacing: 8) {
+                    // Bars
+                    HStack(alignment: .bottom, spacing: spacing) {
+                        ForEach(data.indices, id: \.self) { index in
+                            let item = data[index]
+                            let isHovered = hoveredIndex == index
+
+                            VStack(spacing: 2) {
+                                // Standing bar
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color.standing.opacity(isHovered ? 1.0 : 0.8))
+                                    .frame(height: barHeight(for: item.standing, maxHeight: chartHeight))
+
+                                // Sitting bar
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color.sitting.opacity(isHovered ? 1.0 : 0.8))
+                                    .frame(height: barHeight(for: item.sitting, maxHeight: chartHeight))
+                            }
+                            .frame(width: barWidth)
+                            .scaleEffect(isHovered ? 1.05 : 1.0)
+                            .animation(.easeInOut(duration: 0.15), value: isHovered)
+                            .onHover { hovering in
+                                hoveredIndex = hovering ? index : nil
+                            }
+                        }
+                    }
+                    .frame(height: chartHeight)
+
+                    // Labels
+                    HStack(spacing: spacing) {
+                        ForEach(data.indices, id: \.self) { index in
+                            let isHovered = hoveredIndex == index
+                            let isToday = index == data.count - 1
+
+                            Text(data[index].day)
+                                .font(AppFont.small)
+                                .foregroundColor(isToday ? .accentOrange : (isHovered ? .textPrimary : .textMuted))
+                                .frame(width: barWidth)
+                        }
                     }
                 }
             }
-            .frame(height: 100)
-
-            // Labels
-            HStack(spacing: 8) {
-                ForEach(data.indices, id: \.self) { index in
-                    Text(data[index].day)
-                        .font(AppFont.small)
-                        .foregroundColor(index == data.count - 1 ? .accentOrange : .textMuted)
-                        .frame(width: 24)
-                }
-            }
+            .frame(minHeight: 140)
         }
         .padding(16)
         .background(Color.cardBackground)
         .cornerRadius(16)
     }
 
-    private func barHeight(for value: Double) -> CGFloat {
-        guard maxValue > 0 else { return 0 }
-        return max(4, CGFloat(value / maxValue) * 80)
+    private func barHeight(for value: Double, maxHeight: CGFloat) -> CGFloat {
+        guard maxValue > 0 else { return 4 }
+        return max(4, CGFloat(value / maxValue) * (maxHeight - 8))
+    }
+
+    private func formatHours(_ hours: Double) -> String {
+        if hours < 1 {
+            return "\(Int(hours * 60))m"
+        }
+        let h = Int(hours)
+        let m = Int((hours - Double(h)) * 60)
+        return m > 0 ? "\(h)h \(m)m" : "\(h)h"
     }
 }
 
