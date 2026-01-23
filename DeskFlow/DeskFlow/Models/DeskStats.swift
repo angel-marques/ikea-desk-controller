@@ -1,5 +1,10 @@
 import Foundation
 
+struct LastSession: Codable {
+    var height: Double
+    var timestamp: Date
+}
+
 struct DailyStats: Codable, Identifiable {
     var id: Date { date }
     var date: Date

@@ -29,6 +29,12 @@ struct MainControlView: View {
         .onDisappear {
             bluetoothManager.stopHeightPolling()
         }
+        .onChange(of: bluetoothManager.connectionState) { _, newState in
+            // When connected, try to resume session from last known state
+            if newState.isConnected {
+                statsManager.resumeSessionIfNeeded(currentHeight: bluetoothManager.currentHeight)
+            }
+        }
         .onChange(of: bluetoothManager.currentHeight) { _, newHeight in
             statsManager.updateHeight(newHeight)
         }
