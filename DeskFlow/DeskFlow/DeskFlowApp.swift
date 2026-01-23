@@ -72,14 +72,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func showMainWindow() {
-        // Show in dock first
         NSApp.setActivationPolicy(.regular)
-        NSApp.activate(ignoringOtherApps: true)
 
-        // Open window
         if let window = NSApp.windows.first(where: { $0.canBecomeMain }) {
             window.makeKeyAndOrderFront(nil)
         }
+
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     private func updateDockVisibility() {

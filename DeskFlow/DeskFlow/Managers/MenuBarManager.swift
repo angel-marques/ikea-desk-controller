@@ -127,21 +127,19 @@ class MenuBarManager: NSObject, ObservableObject {
     }
 
     @objc private func openMainWindow() {
-        // Close popover first
         closePopover()
 
-        // Delay to let popover close, then show window
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             NSApp.setActivationPolicy(.regular)
 
             if let window = NSApp.windows.first(where: { $0.canBecomeMain }) {
+                if window.isMiniaturized {
+                    window.deminiaturize(nil)
+                }
                 window.makeKeyAndOrderFront(nil)
             }
 
-            // Activate after window is shown
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                NSApp.activate(ignoringOtherApps: true)
-            }
+            NSApp.activate(ignoringOtherApps: true)
         }
     }
 
