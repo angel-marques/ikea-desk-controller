@@ -1,211 +1,116 @@
-# IKEA IDÅSEN Desk Controller
+<p align="center">
+  <img src="DeskFlow/DeskFlow/Assets.xcassets/AppIcon.appiconset/icon_256.png" width="128" alt="DeskFlow Icon">
+</p>
 
-Control your IKEA IDÅSEN standing desk from macOS via Bluetooth Low Energy.
+<h1 align="center">DeskFlow</h1>
 
-## Requirements
+<p align="center">
+  <strong>Control your IKEA IDÅSEN standing desk from your Mac</strong>
+</p>
 
-- macOS with Bluetooth
-- IKEA IDÅSEN desk with LINAK Bluetooth controller
-- Python 3.11+
-- [uv](https://github.com/astral-sh/uv) package manager
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#screenshots">Screenshots</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#alternatives">Alternatives</a>
+</p>
+
+---
+
+## Features
+
+- **Bluetooth Control** — Connect directly to your IKEA IDÅSEN desk via Bluetooth LE
+- **Height Presets** — Save and quickly switch between your favorite positions (sitting, standing, walking)
+- **Real-time Display** — See your current desk height with a visual representation
+- **Usage Statistics** — Track your standing vs sitting time with daily and weekly charts
+- **Menu Bar App** — Lives in your menu bar for quick access without cluttering your dock
+- **Daily Goals** — Set standing goals and track your progress
+
+## Screenshots
+
+<p align="center">
+  <img src="assets/screenshot-control.png" width="260" alt="Control View">
+  &nbsp;&nbsp;
+  <img src="assets/screenshot-profiles.png" width="260" alt="Profiles View">
+  &nbsp;&nbsp;
+  <img src="assets/screenshot-stats.png" width="260" alt="Statistics View">
+</p>
+
+<p align="center">
+  <em>Control • Profiles • Statistics</em>
+</p>
 
 ## Installation
 
-```bash
-# Clone or download this project
-cd ikea-table
+### Requirements
 
-# Install dependencies
-uv sync
-```
+- macOS 13.0 or later
+- IKEA IDÅSEN desk with Bluetooth connectivity
+- Bluetooth enabled on your Mac
 
-## Initial Setup
+### Download
 
-### 1. Grant Bluetooth Permissions
+Download the latest release from the [Releases](../../releases) page.
 
-The first time you run the app, macOS will ask for Bluetooth permissions. Grant access to your terminal app (Terminal, iTerm, Warp, etc.) in:
-
-**System Settings > Privacy & Security > Bluetooth**
-
-### 2. Find Your Desk
-
-Put your desk in pairing mode (the Bluetooth button should be blinking) and scan:
+### Build from Source
 
 ```bash
-uv run python idasen_controller.py scan
+git clone https://github.com/yourusername/DeskFlow.git
+cd DeskFlow/DeskFlow
+open DeskFlow.xcodeproj
 ```
 
-Output:
-```
-Scanning for desks (10.0s)...
-  Found: Desk Table [YOUR-DESK-UUID-HERE]
-```
-
-### 3. Save Your Desk UUID
-
-```bash
-uv run python idasen_controller.py -a YOUR_UUID config
-```
-
-This saves the UUID to `config.toml` so you don't need to specify it every time.
+Build and run with Xcode (⌘R).
 
 ## Usage
 
-### Basic Commands
+1. **Connect** — Launch DeskFlow and it will automatically search for your IDÅSEN desk
+2. **Control** — Use the up/down buttons or click a preset to move your desk
+3. **Customize** — Create profiles for your preferred heights (sitting, standing, treadmill, etc.)
+4. **Track** — Monitor your standing habits in the Statistics tab
 
-| Command | Description |
-|---------|-------------|
-| `height` | Show current desk height |
-| `up` | Move desk up (~1 second) |
-| `down` | Move desk down (~1 second) |
-| `stop` | Stop desk movement |
-| `monitor` | Watch height in real-time |
+### Menu Bar
 
-```bash
-# Show current height
-uv run python idasen_controller.py height
+DeskFlow lives in your menu bar when the main window is closed. Click the icon to:
+- See your current height
+- Quick-switch between presets
+- Access the full app
 
-# Monitor height while moving with physical buttons
-uv run python idasen_controller.py monitor
-# Press Ctrl+C to stop
-```
+## Compatibility
 
-### Preset Positions
+DeskFlow works with **IKEA IDÅSEN** sit/stand desks that have Bluetooth connectivity (the desks with the physical controller that has up/down memory buttons).
 
-Three built-in positions are available:
+The app communicates via Bluetooth LE using the LINAK DPG1C protocol.
 
-| Command | Default Height | Description |
-|---------|---------------|-------------|
-| `sit` | 72cm | Sitting position |
-| `stand` | 110cm | Standing position |
-| `walk` | 118cm | Walking pad/treadmill position |
+## Alternatives
+
+### Python CLI
+
+Prefer the command line? Check out the [Python CLI tool](python-cli/) for terminal-based control:
 
 ```bash
+cd python-cli
+uv sync
 uv run python idasen_controller.py sit
 uv run python idasen_controller.py stand
-uv run python idasen_controller.py walk
-```
-
-### Move to Specific Height
-
-```bash
-# Move to 85cm
 uv run python idasen_controller.py move 0.85
-
-# Move to 1 meter
-uv run python idasen_controller.py move 1.0
 ```
 
-Height range: **0.62m - 1.27m** (62cm - 127cm)
+See [python-cli/README.md](python-cli/README.md) for full documentation.
 
-### Custom Presets
+## Credits
 
-Save any height with a custom name:
-
-```bash
-# Save current height as a preset
-uv run python idasen_controller.py save gaming
-
-# List all saved presets
-uv run python idasen_controller.py presets
-
-# Move to a saved preset
-uv run python idasen_controller.py go gaming
-
-# Delete a preset
-uv run python idasen_controller.py delete gaming
-```
-
-Presets are stored in `presets.json`.
-
-## Configuration
-
-### config.toml
-
-Main configuration file with desk UUID and default heights:
-
-```toml
-addr = "YOUR-DESK-UUID-HERE"
-sit_height = 0.761
-stand_height = 1.1
-walk_height = 1.18
-```
-
-### Changing Default Heights
-
-```bash
-# Change sit height to 75cm
-uv run python idasen_controller.py --sit-height 0.75 config
-
-# Change all heights at once
-uv run python idasen_controller.py --sit-height 0.75 --stand-height 1.08 --walk-height 1.20 config
-```
-
-### presets.json
-
-Custom presets are stored here:
-
-```json
-{
-  "gaming": 0.78,
-  "drawing": 0.95,
-  "meeting": 1.05
-}
-```
-
-## Shell Alias (Optional)
-
-Add to your `~/.zshrc` or `~/.bashrc`:
-
-```bash
-alias desk="uv run python ~/Code/lab/ikea-table/idasen_controller.py"
-```
-
-Then use:
-
-```bash
-desk sit
-desk stand
-desk go gaming
-desk height
-```
-
-## Troubleshooting
-
-### Desk not found during scan
-
-1. Make sure Bluetooth is enabled on your Mac
-2. Put the desk in pairing mode (Bluetooth button blinking)
-3. Ensure the desk isn't connected to another device (phone app, etc.)
-
-### Permission denied / Exit code 134
-
-Grant Bluetooth permission to your terminal:
-- **System Settings > Privacy & Security > Bluetooth**
-- Add your terminal app to the list
-
-### Desk doesn't move
-
-1. Make sure you're not holding the physical buttons
-2. Try the `up` or `down` command first to test basic movement
-3. Check that the desk isn't at its height limit
-
-### Connection fails
-
-The desk may have gone to sleep. Press any button on the physical controller to wake it up, then try again.
-
-## Technical Details
-
-This tool communicates with the LINAK DPG1C Bluetooth controller built into IKEA IDÅSEN desks using the following BLE characteristics:
-
-- **Height**: `99fa0021-338a-1024-8a49-009c0215f78a`
-- **Command**: `99fa0002-338a-1024-8a49-009c0215f78a`
-- **Reference Input**: `99fa0031-338a-1024-8a49-009c0215f78a`
-
-Protocol information reverse-engineered by the community. See:
+Protocol information reverse-engineered by the community:
 - [newAM/idasen](https://github.com/newAM/idasen)
 - [rhyst/linak-controller](https://github.com/rhyst/linak-controller)
 
 ## License
 
-MIT
+MIT License — feel free to use, modify, and distribute.
+
+---
+
+<p align="center">
+  Made with ☕ for healthier work habits
+</p>
