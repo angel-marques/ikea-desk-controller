@@ -130,29 +130,28 @@ class StatsManager: ObservableObject {
         let now = Date()
         let elapsed = now.timeIntervalSince(lastHeightCheck)
 
-        // Only count reasonable intervals (less than 5 minutes for live tracking)
-        if elapsed < 300 {
-            let wasStanding = isStanding
-            isStanding = height >= standingThreshold
-
+        // Add pending time since last tick (max 5 min to avoid edge cases)
+        let timeToAdd = min(max(elapsed, 0), 300)
+        if timeToAdd > 0 {
             if isStanding {
-                todayStats.standingTime += elapsed
+                todayStats.standingTime += timeToAdd
             } else {
-                todayStats.sittingTime += elapsed
+                todayStats.sittingTime += timeToAdd
             }
+        }
 
-            // Count transitions
-            if wasStanding != isStanding {
-                todayStats.transitions += 1
-            }
+        let wasStanding = isStanding
+        isStanding = height >= standingThreshold
 
-            saveStats()
-            updateGoalProgress()
+        // Count transitions
+        if wasStanding != isStanding {
+            todayStats.transitions += 1
         }
 
         lastHeightCheck = now
         lastHeight = height
-        isStanding = height >= standingThreshold
+        saveStats()
+        updateGoalProgress()
         saveLastSession()
     }
 
@@ -160,8 +159,32 @@ class StatsManager: ObservableObject {
         trackingTimer?.invalidate()
         trackingTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
             Task { @MainActor in
-                self?.checkDayChange()
+                self?.tickTime()
             }
+        }
+    }
+
+    /// Called every minute to accumulate time even when height doesn't change
+    private func tickTime() {
+        checkDayChange()
+
+        let now = Date()
+        let elapsed = now.timeIntervalSince(lastHeightCheck)
+
+        // Accumulate time since last check (max 2 minutes to handle slight delays)
+        let timeToAdd = min(max(elapsed, 0), 120)
+
+        if timeToAdd > 0 {
+            if isStanding {
+                todayStats.standingTime += timeToAdd
+            } else {
+                todayStats.sittingTime += timeToAdd
+            }
+
+            lastHeightCheck = now
+            saveStats()
+            updateGoalProgress()
+            saveLastSession()
         }
     }
 
