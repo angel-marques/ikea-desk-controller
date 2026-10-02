@@ -9,39 +9,35 @@
 /* Begin PBXBuildFile section */
 		A100000000000001 /* DeskFlowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000001 /* DeskFlowApp.swift */; };
 		A100000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000002 /* ContentView.swift */; };
-		A100000000000003 /* MainControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000003 /* MainControlView.swift */; };
+		A100000000000003 /* DeskControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000003 /* DeskControlView.swift */; };
 		A100000000000004 /* ProfilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000004 /* ProfilesView.swift */; };
-		A100000000000005 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000005 /* EditProfileView.swift */; };
-		A100000000000006 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000006 /* StatsView.swift */; };
-		A100000000000007 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000007 /* SettingsView.swift */; };
-		A100000000000008 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000008 /* BluetoothManager.swift */; };
-		A100000000000009 /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000009 /* ProfileManager.swift */; };
-		A10000000000000A /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000A /* StatsManager.swift */; };
+		A100000000000005 /* ProfileEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000005 /* ProfileEditor.swift */; };
+		A100000000000006 /* IconPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000006 /* IconPicker.swift */; };
+		A10000000000000C /* ProfileIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000C /* ProfileIcons.swift */; };
+		A100000000000008 /* DeskLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000008 /* DeskLink.swift */; };
+		A100000000000009 /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000009 /* ProfileStore.swift */; };
+		A10000000000000A /* PathWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000A /* PathWatcher.swift */; };
 		A10000000000000B /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000B /* Profile.swift */; };
-		A10000000000000C /* DeskStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000C /* DeskStats.swift */; };
 		A10000000000000D /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000D /* DesignSystem.swift */; };
 		A10000000000000E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000E /* Assets.xcassets */; };
-		A10000000000000F /* MenuBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000000000011 /* MenuBarManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A200000000000001 /* DeskFlowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeskFlowApp.swift; sourceTree = "<group>"; };
 		A200000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		A200000000000003 /* MainControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainControlView.swift; sourceTree = "<group>"; };
+		A200000000000003 /* DeskControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeskControlView.swift; sourceTree = "<group>"; };
 		A200000000000004 /* ProfilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilesView.swift; sourceTree = "<group>"; };
-		A200000000000005 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
-		A200000000000006 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
-		A200000000000007 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		A200000000000008 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
-		A200000000000009 /* ProfileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
-		A20000000000000A /* StatsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsManager.swift; sourceTree = "<group>"; };
+		A200000000000005 /* ProfileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditor.swift; sourceTree = "<group>"; };
+		A200000000000006 /* IconPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPicker.swift; sourceTree = "<group>"; };
+		A20000000000000C /* ProfileIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileIcons.swift; sourceTree = "<group>"; };
+		A200000000000008 /* DeskLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeskLink.swift; sourceTree = "<group>"; };
+		A200000000000009 /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
+		A20000000000000A /* PathWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathWatcher.swift; sourceTree = "<group>"; };
 		A20000000000000B /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
-		A20000000000000C /* DeskStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeskStats.swift; sourceTree = "<group>"; };
 		A20000000000000D /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		A20000000000000E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A20000000000000F /* DeskFlow.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DeskFlow.entitlements; sourceTree = "<group>"; };
 		A200000000000010 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A200000000000011 /* MenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
 		A300000000000001 /* DeskFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeskFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -91,11 +87,10 @@
 			isa = PBXGroup;
 			children = (
 				A200000000000002 /* ContentView.swift */,
-				A200000000000003 /* MainControlView.swift */,
+				A200000000000003 /* DeskControlView.swift */,
 				A200000000000004 /* ProfilesView.swift */,
-				A200000000000005 /* EditProfileView.swift */,
-				A200000000000006 /* StatsView.swift */,
-				A200000000000007 /* SettingsView.swift */,
+				A200000000000005 /* ProfileEditor.swift */,
+				A200000000000006 /* IconPicker.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -103,10 +98,9 @@
 		A500000000000005 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				A200000000000008 /* BluetoothManager.swift */,
-				A200000000000009 /* ProfileManager.swift */,
-				A20000000000000A /* StatsManager.swift */,
-				A200000000000011 /* MenuBarManager.swift */,
+				A200000000000008 /* DeskLink.swift */,
+				A200000000000009 /* ProfileStore.swift */,
+				A20000000000000A /* PathWatcher.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -115,7 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				A20000000000000B /* Profile.swift */,
-				A20000000000000C /* DeskStats.swift */,
+				A20000000000000C /* ProfileIcons.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -199,18 +193,16 @@
 			files = (
 				A100000000000001 /* DeskFlowApp.swift in Sources */,
 				A100000000000002 /* ContentView.swift in Sources */,
-				A100000000000003 /* MainControlView.swift in Sources */,
+				A100000000000003 /* DeskControlView.swift in Sources */,
 				A100000000000004 /* ProfilesView.swift in Sources */,
-				A100000000000005 /* EditProfileView.swift in Sources */,
-				A100000000000006 /* StatsView.swift in Sources */,
-				A100000000000007 /* SettingsView.swift in Sources */,
-				A100000000000008 /* BluetoothManager.swift in Sources */,
-				A100000000000009 /* ProfileManager.swift in Sources */,
-				A10000000000000A /* StatsManager.swift in Sources */,
+				A100000000000005 /* ProfileEditor.swift in Sources */,
+				A100000000000008 /* DeskLink.swift in Sources */,
+				A100000000000009 /* ProfileStore.swift in Sources */,
+				A10000000000000A /* PathWatcher.swift in Sources */,
 				A10000000000000B /* Profile.swift in Sources */,
-				A10000000000000C /* DeskStats.swift in Sources */,
+				A10000000000000C /* ProfileIcons.swift in Sources */,
+				A100000000000006 /* IconPicker.swift in Sources */,
 				A10000000000000D /* DesignSystem.swift in Sources */,
-				A10000000000000F /* MenuBarManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,7 +341,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DeskFlow/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "DeskFlow needs Bluetooth access to connect to and control your IKEA IDÅSEN desk.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -378,7 +369,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DeskFlow/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "DeskFlow needs Bluetooth access to connect to and control your IKEA IDÅSEN desk.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
